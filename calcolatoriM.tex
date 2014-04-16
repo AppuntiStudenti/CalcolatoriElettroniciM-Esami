@@ -1,0 +1,754 @@
+\documentclass[a4paper]{report}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{graphicx, import}
+\usepackage{fixltx2e}
+\usepackage[latin1]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{vmargin}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[italian]{varioref}
+\usepackage{relsize}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+
+\usepackage{hyperref}
+
+\newcommand*{\arowstyle}{}
+
+\newcommand*{\rowstyle}[1]{% sets the style of the next row
+  \gdef\arowstyle{#1}%
+  \arowstyle\ignorespaces%
+}
+
+\newcolumntype{=}{% resets the row style
+  >{\gdef\arowstyle{}}%
+}
+
+\newcolumntype{+}{% adds the current row style to the next column
+  >{\arowstyle}%
+}
+
+
+\newcommand{\hex}[1]{$\mathrm{#1}\,\mathrm{H}$}
+\newcommand{\mathex}[1]{\mathrm{#1}\,\mathrm{H}}
+\newcommand{\OL}[1]{$\overline{\mathrm{#1}}$}
+\newcommand{\xdot}{$\cdot$}
+\newcommand{\Sc}[1]{\multicolumn{1}{|c|}{#1}}
+
+\newlength\Origarrayrulewidth
+\newcommand{\Cline}[1]{%
+  \noalign{\global\setlength\Origarrayrulewidth{\arrayrulewidth}}%
+  \noalign{\global\setlength\arrayrulewidth{1pt}}\cline{#1}%
+  \noalign{\global\setlength\arrayrulewidth{\Origarrayrulewidth}}%
+}
+
+% draw a vertical rule of width 2pt on both sides of a cell
+\newcommand\Thickvrule[1]{%
+  \multicolumn{1}{!{\vrule width 2pt}c!{\vrule width 2pt}}{#1}%
+}
+% draw a vertical rule of width 2pt on the left side of a cell
+\newcommand\Thickvrulel[1]{%
+  \multicolumn{1}{!{\vrule width 2pt}c|}{#1}%
+}
+% draw a vertical rule of width 2pt on the right side of a cell
+\newcommand\Thickvruler[1]{%
+  \multicolumn{1}{|c!{\vrule width 2pt}}{#1}%
+}
+
+\begin{document}
+
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=2em]
+\tikzstyle{Block} = [rectangle, draw, fill=blue!20, 
+    text width=10em, text centered, rounded corners, minimum height=2em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em, text centered]
+
+\setpapersize{A4}
+\chapter*{4/2/2014}
+
+\section*{ESERCIZIO 2 (pt 23, PROGETTO): DMAC, Task e Cache} 
+
+Un sistema \textbf{S} con bus di memoria da 64 bit e bus di I/O da 8 bit dispone di \textbf{3 Porte Parallele} di ingresso da \textbf{8 bit} P\_IN1, P\_IN2, P\_IN3 gestite in DMA, \textbf{una porta seriale di uscita} S\_OUT0 gestita anch'essa in DMA, un Pentium \textbf{P}, un \textbf{PIC} e memoria costituita da \textbf{1 MB} di EPROM (mappata agli indirizzi fisici alti) e \textbf{1 MB} di RAM (mappata agli indirizzi bassi). \\
+Il Pentium dispone di una cache dati a 2 vie da 8KB complessivi e linee da 32 byte, gestita con stato MESI e con politica di scrittura \textit{Write-Around} in caso di miss. \\
+Il sistema \textbf{S} funziona con \textit{memoria virtuale disabilitata} e l'applicazione dispone di un unico \textbf{segmento dati SD mappato all'indirizzo fisico \hex{1\,0000}.} Nel segmento sono memorizzati a indirizzi adiacenti \textbf{4 vettori di 2KB} l'uno, denominati rispettivamente A1, A3, A4 e RIS (A1 parte dall'indirizzo \hex{1\,0000}). \\
+\textbf{S} riceve in DMA dalle 3 porte parallele P\_INi i 3 vettori Ai, quindi esegue la seguente operazione vettoriale: \\
+\textbf{RIS = (A1 OR A2) AND A3} \\
+Completata l'elaborazione, il vettore RIS viene trasmesso in DMA sulla porta di uscita S\_OUT0. \\
+I dati arrivano sulle 3 porte di ingresso con tre flussi concorrenti e \textit{con una cadenza approssimativa di 2 KB/s per canale.} La porta seriale S\_OUT0 è una UART funzionante a $9600$b/s.
+\textbf{Un unico task T0 gestisce le tre porte parallele} ed esegue l'elaborazione una volta completata la ricezione su tutti e tre i canali che, come già detto, avviene con flussi di dati concorrenti. Ad avvenuta elaborazione, viene fatto partire il task T1 che si incarica di trasmettere sulla seriale il vettore RIS appena elaborato e, al termine della trasmissione, ciclicamente, fa ripartire la ricezione dalle tre porte di ingresso. \\
+\\
+Si risponda ai seguenti quesiti, motivando le risposte:\\
+\begin{enumerate}
+\item Si disegni lo schema a blocchi di S, si disegni la mappa della memoria che mostra il segmento dati SD con i suoi componenti, si definisca il data segment \textbf{SD} e se ne costruisca il desdrittore. (punti 2) 
+\item Su integrino nel sistema le porte di ingresso e uscita, il DMAC, il PIC e \textbf{la memoria} e si indichi quali canali di DMA si utilizzano e quanti e quali segnali di \textit{interrupt request} vengono generati. Si dica come vengono programmati il DMAC e i registri esterni del DMAC e \textbf{si disegni il contenuto della IDT.} (punti 5)
+\item Si disegnino \textbf{con cura} le flow chart dei tast \textbf{T0, T1 e Idle (indicando per bene le operazioni di controllo sui dispositivi mappati in I/O)} e si indichi la sequenza dei \textit{task running}, ci si fermi al termine della prima trasmissione di RIS alla seriale. Come si fa a essere sicuri che non si perdano interrupt e, al tempo stesso, che l'arrivo di un interrupt non faccia partire il task T0 quando questo è BUSY? Si faccia l'ipotesi che il PIC sia programmato in \textit{positive edge triggered mode.} (punti 5) 
+\item Impiegando le informazioni precedenti, si indichi approssimativamente dopo quanto tempo termina la trasmissione del primo messaggio a S\_OUT0. Durante questo periodo cosa fa principalmente la CPU? (punti -2...1) 
+\item Per \textit{10 punti} si analizzi la dinamica della \textbf{cache} dati e si risponda in modo il più possibile \textbf{conciso e tabellare} ai seguenti quesiti:
+\begin{enumerate}
+\item Quali sono gli indici di set e i tag associati ai vettori A1, A2, A3 e RIS? 
+\item Qual è lo stato della cache al termine della prima ricezione dei 3 vettori A1, A2, A3? 
+\item Si scriva la sequenza di operazioni elementari con cui si esegue l'elaborazione (si scriva la prima iterazione usando ad esempio l'assembler del DLX), quindi se ne calcoli la miss rate. Si riesce a ottenere una miss rate complessiva inferiore al $2.5$\%? Qual è la più bassa miss rate ottenibile e qual è la sequenza di istruzioni con cui la si ottiene? E in questo caso quanti sono gli accessi?
+\item Nella soluzione prescelta al punto precedente, vale il principio di località temporale? E quello di località spaziale? Quanto incidono (qualitativamente= questi principi sulla miss rate?
+\item Qual è lo stato della cache negli istanti di fine elaborazione e fine trasmissione di RIS alla seriale?
+\item Avrei ottenuto miss rate diverse con cache di 16KB? E con cache di 4KB? (Si considerino solo cache con due vie e linee di 32 byte)
+\end{enumerate}
+\end{enumerate}
+\newpage
+\section{Esercizio 1 - Punti 2}
+Lo schema a blocchi è quello in figura \vref{fig:S}, mentre il segmento dati SD è mappato in memoria secondo la tabella \vref{tab:memoria}.
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{systemschema.pdf_tex}
+\caption{Schema a blocchi di \textbf{S}.}
+\label{fig:S}
+\end{figure}
+
+\begin{table}[htbp!]
+\setlength\extrarowheight{2pt}
+\caption{Mappa della memoria del segmento SD.}
+\centering
+{
+\relsize{-1}
+	\begin{tabular}%
+		{=r|@{}+p{1.4cm}@{}|@{}+p{1.4cm}@{}|@{}+p{1.4cm}@{}|@{}+p{1.4cm}@{}|@{}+p{1.4cm}@{}|@{}+p{1.4cm}@{}|%
+		@{}+p{1.4cm}@{}|@{}+p{1.4cm}@{}|=l@{}}
+	
+	\cline{2-9}
+	 & Banco 7 & Banco 6 & Banco 5 & Banco 4 & Banco 3 & Banco 2 & Banco 1 & Banco 0 & \\
+	\Cline{2-9}
+	
+	... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+	\cline{2-9}
+	
+	\hex{1\,1FFF} & \rowstyle{\leavevmode\color{red}}%
+		RIS(2K-1) & RIS(2K-2) & ... & ... & ... & ... & ... & RIS(2K-8) & %
+	\hex{1\,1FF8} \\
+	\cline{2-9}
+	
+	... & \rowstyle{\leavevmode\color{red}}%
+		... & ... & ... & ... & ... & ... & ... & ... & %
+	... \\
+	\cline{2-9}
+	
+	\hex{1\,1807} & \rowstyle{\leavevmode\color{red}}%
+		RIS(7) & RIS(6) & ... & ... & ... & ... & ... & RIS(0) & %
+	\hex{1\,1800} \\
+	\cline{2-9}
+	
+	\hex{1\,17FF} & \rowstyle{\leavevmode\color{ForestGreen}}%
+		A3(2K-1) & A3(2K-2) & ... & ... & ... & ... & ... & A3(2K-8) & %
+	\hex{1\,17F8} \\
+	\cline{2-9}
+	
+	... & \rowstyle{\leavevmode\color{ForestGreen}}%
+		... & ... & ... & ... & ... & ... & ... & ... & %
+	... \\
+	\cline{2-9}
+	
+	\hex{1\,1007} & \rowstyle{\leavevmode\color{ForestGreen}}%
+		A3(7) & A3(6) & ... & ... & ... & ... & ... & A3(0) & %
+	\hex{1\,1000} \\
+	\cline{2-9}
+	
+	\hex{1\,0FFF} & \rowstyle{\leavevmode\color{blue}}%
+		A2(2K-1) & A2(2K-2) & ... & ... & ... & ... & ... & A2(2K-8) & %
+	\hex{1\,0FF8} \\
+	\cline{2-9}
+	
+	... & \rowstyle{\leavevmode\color{blue}}%
+		... & ... & ... & ... & ... & ... & ... & ... & %
+	... \\
+	\cline{2-9}
+	
+	\hex{1\,0807} & \rowstyle{\leavevmode\color{blue}}%
+		A2(7) & A2(6) & ... & ... & ... & ... & ... & A2(0) & %
+	\hex{1\,0800} \\
+	\cline{2-9}
+	
+	\hex{1\,07FF} & \rowstyle{\leavevmode\color{YellowOrange}}%
+		A1(2K-1) & A1(2K-2) & ... & ... & ... & ... & ... & A1(2K-8) & %
+	\hex{1\,0FF8} \\
+	\cline{2-9}
+	
+	... & \rowstyle{\leavevmode\color{YellowOrange}}%
+		... & ... & ... & ... & ... & ... & ... & ... & %
+	... \\
+	\cline{2-9}
+	
+	\hex{1\,0007} & \rowstyle{\leavevmode\color{YellowOrange}}%
+		A1(7) & A1(6) & ... & ... & ... & ... & ... & A1(0) & %
+	\hex{1\,0000} \\
+	\cline{2-9}
+	
+	... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+	\cline{2-9}
+	
+	\end{tabular}
+}
+\label{tab:memoria}
+\end{table}
+
+In codice assembly il segmento è così definito:
+\begin{verbatim}
+SD segment at 10000H
+    A1  w   1024dup
+    A2  w   1024dup
+    A3  w   1024dup
+    RIS w   1024dup
+SD ends
+\end{verbatim}
+Il segmento parte all'indirizzo \hex{1\,0000} ed è composto da 4 vettori di 2KB l'uno, per un totale 8KB. L'offset del segmento è quindi:
+
+$$
+[8\mathrm{KB}]_\mathrm{H} - \mathex{1} = \mathex{20000} - \mathex{1} = \mathex{1FFF}
+$$
+
+Il descrittore, perciò, è quello riportato in tabella \vref{tab:desc}.
+
+\begin{table}[htbp!]
+\centering
+\caption{Descrittore di SD.}
+\label{tab:desc}
+\begin{tabular}{cccccccccccccccccccccccc}
+\multicolumn{6}{c}{} & G & \multicolumn{8}{c}{} & E & W & \multicolumn{7}{c}{}\\
+\hline
+\multicolumn{6}{|c|}{\hex{00}} & \Sc{0} & \Sc{B} & \Sc{0} & \Sc{AVL} & \multicolumn{2}{|c|}{\hex{0}} &%
+	\Sc{1} & \Sc{DPL} & \Sc{0} & \Sc{0} & \Sc{1} & \Sc{A} & \multicolumn{6}{|c|}{\hex{01}} \\
+\hline
+\multicolumn{12}{|c|}{\hex{0000}} & \multicolumn{12}{|c|}{\hex{1FFF}} \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Esercizio 2 - Punti 5}
+
+Nel sistema abbiamo tre porte d'ingresso parallele e una porta d'uscita seriale. Per porta UART (Universal Asynchronous Receiver-Transmitter) non si intende altro che un dispositivo che converte un flusso di bit da una porta parallela in un formato seriale asincrono (o viceversa) con il quale si interfaccia al sistema. Per i nostri scopi, perciò, è da considerare \textit{come una qualunque porta seriale}. Difatti, la porta 8250 è una UART.\\
+Fissato ciò, passiamo a interfacciare i dispositivi con il sistema. È importante ricordare che \textit{tutti i dispositivi sono gestiti in DMA}. La nostra, fortuna, in questo caso, è che i dispositivi sono ''solo '' quattro (tre porte parallele e una seriale), perciò un unico DMAC  a quattro canali sarà sufficiente per gestirli tutti. In caso contrario, avremmo dovuto utilizzarne almeno tre: uno in \textit{cascade mode} al quale ne sarebbero stati collegati almeno altri due in \textit{demand mode} o \textit{single mode}. \textbf{Ma non è questo il nostro caso}. \\
+
+\subsection{Indirizzamento}
+Preoccupiamoci, prima ancora di affrontare l'interfacciamento al sistema, di indirizzare ogni componente di esso. La tabella \vref{tab:address} organizza tutti gli indirizzi, la loro decodifica semplificata e i nomi dei segnali di \textit{chip select}.
+\begin{table}
+\centering
+\caption{Tabella degli indirizzi di tutti i dispositivi}
+\label{tab:address}
+{
+\relsize{-2}
+\begin{tabularx}{\textwidth}{l@{  }c@{  }c@{  }c@{  }c@{  }c@{  }r}
+\toprule
+Dispositivo & M/IO & Indirizzo iniziale & Indirizzo finale & Decodifica semplificata & Segnali di comando & Nome del CS \\
+\midrule
+RAM & M & \hex{0000\,0000} & \hex{000F\,FFFF} & \OL{BA31} & MEMRDC\#, MEMWRC\# & CS\_RAM \\
+EPROM & M & \hex{FFF0\,0000} & \hex{FFFF\,FFFF} & BA31 & MEMRDC\# & CS\_EPROM \\
+DMAC & IO & \hex{0100} & \hex{010F} & \OL{BA12}\xdot\OL{BA11}\xdot\OL{BA10}\xdot BA9 & IORDC\#, IOWRC\# & CS\_DMAC \\
+PIC & IO & \hex{0200} & \hex{0201} & \OL{BA12}\xdot\OL{BA11}\xdot BA10 \xdot\OL{BA9} & IORDC\#, IOWRC\#, INTA\# & CS\_PIC \\
+P\_IN0 & IO & \hex{0300} & \hex{0303} & \OL{BA12}\xdot\OL{BA11}\xdot BA10\xdot BA9 & IORDC\# & CS\_P\_IN0 \\
+P\_IN1 & IO & \hex{0400} & \hex{0403} & \OL{BA12}\xdot BA11\xdot \OL{BA10}\xdot \OL{BA9} & IORDC\# & CS\_P\_IN1 \\
+P\_IN2 & IO & \hex{0500} & \hex{0503} & \OL{BA12}\xdot BA11\xdot \OL{BA10}\xdot BA9 & IORDC\# & CS\_P\_IN2 \\
+S\_OUT0 & IO & \hex{0600} & \hex{0607} & \OL{BA12}\xdot BA11\xdot \xdot BA10 \xdot\OL{BA9} & IOWRC\# & CS\_S\_OUT0 \\
+HL0 & IO & \hex{0700} & \hex{0700} & \OL{BA12}\xdot BA11\xdot \xdot BA10 \xdot BA9 & IOWRC\# & CS\_HL0 \\
+HH0 & IO & \hex{0800} & \hex{0800} & BA12\xdot \OL{BA11}\xdot\OL{BA10}\xdot\OL{BA9} & IOWRC\# & CS\_HH0 \\
+HL1 & IO & \hex{0900} & \hex{0900} & BA12\xdot \OL{BA11}\xdot\OL{BA10}\xdot BA9 & IOWRC\# & CS\_HL1 \\
+HH1 & IO & \hex{0A00} & \hex{0A00} & BA12\xdot \OL{BA11}\xdot BA10 \xdot\OL{BA9} & IOWRC\# & CS\_HH1 \\
+HL2 & IO & \hex{0B00} & \hex{0B00} & BA12\xdot \OL{BA11}\xdot BA10 \xdot BA9 & IOWRC\# & CS\_HL2 \\
+HH2 & IO & \hex{0C00} & \hex{0C00} & BA12\xdot BA11 \xdot\OL{BA10}\xdot\OL{BA9} & IOWRC\# & CS\_HH2 \\
+HL3 & IO & \hex{0D00} & \hex{0D00} & BA12\xdot BA11 \xdot\OL{BA10}\xdot BA9 & IOWRC\# & CS\_HL3 \\
+HH3 & IO & \hex{0E00} & \hex{0E00} & BA12\xdot BA11 \xdot BA10 \xdot\OL{BA9} & IOWRC\# & CS\_HH3 \\
+\bottomrule
+\end{tabularx}
+}
+\end{table}
+
+\subsection{Encoder}
+Come prologo al nostro interfacciamento, è utile preporre l'encoder in figura \vref{fig:encoder} che traduce i segnali BE[7...0]\# in BA[2..0] per indirizzare i dispositivi di I/O.
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{encoder8-3.pdf_tex}
+\caption{Schema a blocchi dell'\textit{encoder}.}
+\label{fig:encoder}
+\end{figure}
+
+\subsection{Porte parallele P\_INi}
+Tutte le porte parallele si interfacciano allo stesso modo. Notare, in figura \vref{fig:parallel}, che i segnali CS\_P\_IN, BA0 e BA1 non sono direttamente interfacciati con la porta, ma in \textit{multiplexing} con DACKi il \textit{chip select} e con la massa i BA[0,1]. Tutti i multiplexer sono controllati dal segnale HOLDA inviato dalla CPU. Questo per far sì che il dispositivo sia attivo solo quando il DMAC ha ottenuto il controllo del bus.
+Infine, il segnale SRQ è inviato al DREQi del DMAC. Se le porte fossero state gestite ad interrupt, i segnali sarebbero dovuti essere inviati ai piedini IRi del PIC. Ma, ancora una volta, \textbf{non è questo il nostro caso}.
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{parallela.pdf_tex}
+\caption{Schema a blocchi delle porte parallele P\_INi.}
+\label{fig:parallel}
+\end{figure}
+
+\subsection{Porta Seriale S\_OUT0}
+L'interfacciamento della porta seriale è analogo a quello delle porte parallele, con le ovvie differenze nei segnali di comando, SRQ e \textit{chip select}. In figura \vref{fig:serial}, lo schema circuitale.
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{seriale.pdf_tex}
+\caption{Schema a blocchi della porta seriale S\_OUT0.}
+\label{fig:serial}
+\end{figure}
+
+\subsection{RAM}
+La RAM è formata da 8 banchi di $\frac{1\mathrm{MB}}{8} = \frac{2^{20}\mathrm{B}}{2^3} = 2^{17}\mathrm{B} = 128\mathrm{KB}$ ciascuno. Un i-esimo banco è interfacciato con il sistema come in figura \vref{fig:RAM}.
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{RAM.pdf_tex}
+\caption{Schema a blocchi dell'i-esimo banco di RAM.}
+\label{fig:RAM}
+\end{figure}
+
+\subsection{EPROM}
+La EPROM è organizzata esattamente come la RAM, anch'essa in banchi da $128$KB. L'unica differenza, come si evince dalla figura \vref{fig:EPROM}, è solo nel fatto che, per sua natura, la EPROM è una memoria \textit{read only} e perciò non è presente alcun pin WR*.
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{EPROM.pdf_tex}
+\caption{Schema a blocchi dell'i-esimo banco di EPROM.}
+\label{fig:EPROM}
+\end{figure}
+
+\subsection{DMAC}
+Il DMAC è il componente più laborioso da interfacciare. Per semplicità, dividiamo il problema in due parti. Una prima parte riguarda effettivamente il DMAC e i componenti ad esso più direttamente connessi (figura \vref{fig:DMAC}). La seconda parte riguarda i \textit{latches a 8 bit} che interfacciano l'IOB con il BA (figura \vref{fig:latches}). È necessaria una coppia per ogni canale del DMAC perché questo è stato progettato per sistemi con bus di indirizzi a 8 bit, mentre il nostro sistema prevede un bus indirizzi a ben 32 bit. Per sopperire a questa discrepanza, si utilizzano dei \textit{latches} opportunamente programmati dalla CPU.
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{DMAC.pdf_tex}
+\caption{Schema a blocchi del DMAC.}
+\label{fig:DMAC}
+\end{figure}
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{latches.pdf_tex}
+\caption{Schema a blocchi dei \textit{latches} HH e HL.}
+\label{fig:latches}
+\end{figure}
+
+\subsubsection{Programmazione del DMAC}
+Il DMAC utilizza quattro canali, ognuno associato ad un dispostivo di I/O e ad una coppia di \textit{latches}. Ogni dispositivo si occupa del trasferimento di un vettore di 2KB, conseguentemente si avranno 2K trasferimenti per ogni canale DMA, avendo il bus di I/O un parallelismo di 1 byte.
+Per ogni canale del DMAC dobbiamo programmare:
+\begin{itemize}
+\item BAR (\textit{Base Address Register}): indica l'indirizzo iniziale da trasferire; 
+\item BCR (\textit{Base Counter Register}): indica l'offset di indirizzo dopo tutti i trasferimenti; 
+\item LATCH\_HH e LATCH\_HL: sono programmati per indirizzare i 16 MSB di indirizzo; 
+\item MR[7...0] (\textit{Mode Register}): registro a 8 bit identifica la modalità di funzionamento del canale.
+\end{itemize}
+
+In particolare, i bit del mode register, assumono i seguenti significati:
+\begin{description}
+\item[{MR[7,6]}] \textit{MODE}: 00: \textit{demand mode}; 01: \textit{single mode}; 02: \textit{block mode}; 03: \textit{cascade mode}. 
+\item[{MR[5]}] Vale 0 se si vuole lavorare a indirizzi crescenti, 1 altrimenti. 
+\item[{MR[4]}] Vale 1 se è abilitato l'\textit{autoinit}, 0 altrimenti. 
+\item[{MR[3,2]}] 00: \textit{verify}; 01: \textit{write}; 10: \textit{read} 11: illegale; XX se in cascade mode.
+\item[{MR[1,0]}] \textit{CHANNEL SELECT}: indica quale canale si sta utilizzando
+\end{description}
+
+Vengono riportati in tabella \vref{tab:DMACprog} i valori della programmazione.
+
+\begin{table}
+\centering
+\caption{I valori con cui programmare il DMAC}
+\label{tab:DMACprog}
+\begin{tabular}{lccccr}
+\toprule
+Channel & BAR & BCR & LATCH\_HL & LATCH\_HH & MR[7...0] \\
+\midrule
+$0$ & \hex{0000} & \hex{07FF} & \hex{01} & \hex{00} & $01000100$ \\
+$1$ & \hex{0800} & \hex{07FF} & \hex{01} & \hex{00} & $01000101$ \\
+$2$ & \hex{1000} & \hex{07FF} & \hex{01} & \hex{00} & $01000110$ \\
+$3$ & \hex{1800} & \hex{07FF} & \hex{01} & \hex{00} & $01001011$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{PIC}
+Il PIC richiede un interfacciamento leggermente complesso. Ogni entrata per gli \textit{interrupt} IRi è attivata dall'OR dei segnali EOP\# e DACKi\#. Questo interfacciamento ci permette di non perdere gli interrupt e non far partire un task inopportuno nel caso arrivino contemporaneamente più richieste. I dettagli saranno esaminati in dettaglio nel prossimo punto dell'esame. Per ora, si faccia riferimento allo schema a blocchi in figura \vref{fig:pic}.
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{pic.pdf_tex}
+\caption{Schema a blocchi del PIC.}
+\label{fig:pic}
+\end{figure}
+
+\subsubsection{IDT}
+La IDT contiene \textit{due} task gate per gestire i due tipi di interrupt possibili:
+\begin{itemize}
+\item Interrupt proveniente dal DMAC in conseguenza dell'avvenuto trasferimento \textit{dalle porte parallele alla memoria}  e inviato su IR0, IR1 e IR2 (\textbf{INT\_TYPE=\hex{30}}); 
+\item Interrupt proveniente dal DMAC in conseguenza dell'avvenuto trasferimento \textit{dalla memoria alla porta seriale} e inviato su IR3 (\textbf{INT\_TYPE=\hex{31}}).
+\end{itemize}
+
+In tabella \vref{tab:descTG} il descrittore del \textit{task gate} e di seguito il codice assembly del descrittore della IDT:
+
+\begin{table}[htbp!]
+\centering
+\caption{Descrittore del task gate.}
+\label{tab:descTG}
+\begin{tabular}{cccccccccccccccccccccccccccccccc}
+\multicolumn{16}{c}{} & \multicolumn{8}{|c|}{\hex{85}} & \multicolumn{8}{c}{}\\
+\hline
+\multicolumn{16}{|c|}{Reserved} & \Sc{1} & \multicolumn{2}{|c|}{DPL} & \Sc{0} & \Sc{0} & \Sc{1} & \Sc{0} & \Sc{1} & \multicolumn{8}{|c|}{Reserved} \\
+\hline
+\multicolumn{16}{|c|}{Activating task TSS descriptor's selector} & \multicolumn{16}{|c|}{Reserved} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{verbatim}
+    IDT_START:
+        DESCRITTORI     gate    030H dup(?)
+
+30H	T0_GATE	task_gate   <0,2,0,85H,0>
+31H T1_GATE task_gate   <0,3,0,85H,0>
+
+    IDT_END		
+\end{verbatim}
+
+\section{Esercizio 3 - Punti 5}
+
+Le \textit{flow chart} sono di facile realizzazione, purché si tengano bene a mente i seguenti punti:
+\begin{itemize}
+\item Ogni canale del DMAC possiede le proprie coppie di registri BAR, CAR, BCR e CCR, perciò non è necessario riprogrammarli ogniqualvolta venga terminato un singolo trasferimento. 
+\item Operando in \textit{single mode}, il DMAC rilascia il bus ogniqualvolta venga terminato un trasferimento elementare da un qualsiasi canale; questo genera sicuramente \textit{overhead}, ma data la mole dei dati da trasferire, riduciamo l'altrimenti alto rischio di \textit{starvation} della CPU. 
+\item Il DMAC genera il segnale EOP solo dopo il trasferimento dell'ultimo byte su un canale. 
+\item Dopo la generazione di EOP, il canale corrispondente \textit{si maschera automaticamente}.
+\end{itemize}
+\subsection{Flow chart dei task Idle, T0 e T1}
+
+In figura \vref{flow:Idle} è rappresentata la \textit{flow chart} del task \textbf{Idle} che non merita alcun particolare commento: esso si preoccupa solamente di mantenere in attesa e a basso consumo energetico la CPU.
+
+\begin{figure}[htbp]
+\centering
+\caption{Flow chart del task \textbf{Idle}}
+\label{flow:Idle}
+\begin{tikzpicture}[node distance = 1.5cm, auto]
+	
+	\node [cloud] (start) {\textbf{Task Idle}};
+	\node [block,below of=start] (call) {Call T0};
+	\node [block,below of=call] (halt) {HALT};
+	\node [below of=call] (int) {};
+	
+	\path [line] (start) -- (call);
+	\path [line] (call) -- (halt);
+	\path [line] (halt) -- +(0,-1) -- +(-2,-1) |- (halt);
+
+\end{tikzpicture}
+\end{figure}
+
+In figura \vref{flow:T0} è rappresentata la \textit{flow chart} del task di ricezione \textbf{T0}. Dopo aver opportunamente programmato il DMAC e smascherato i canali e gli interrupt necessari, inizializza i trasferimenti e si pone in attesa di un \textit{interrupt} dovuto ad un EOP generato da un \textit{qualsiasi canale DMAC tra CH0, CH1 e CH2}. Ricevuto uno qualsiasi di questi, incrementa una variabile interna e attende il prossimo. Quando la variabile interna raggiunge il valore 3, cioè quando sono stati ricevuti tutti e tre i vettori, maschera gli \textit{interrupt}, esegue le operazioni e trasferisce il controllo al task T1.
+
+\begin{figure}[htbp]
+\centering
+\caption{Flow chart del task \textbf{T0}}
+\label{flow:T0}
+\begin{tikzpicture}[node distance = 1.5cm, auto]
+
+	\node [cloud] (start) {\textbf{Task T0}};
+	\path [line] (start)+(1.75,1+.2) node[anchor=west, yshift=2] {Call from T1 or Idle} -- +(.75,.25+.2) -- +(1,.75+.2) -- (start);
+	\node [Block, below of=start] (prog) {DMAC CHo,CH1 and CH2 programming};
+	\node [Block, below of=prog] (unmask) {Unmask IR0,IR1,IR2 and CH0,CH1,CH2};
+	\node [block, below of=unmask] (init) {$N_T\leftarrow 0$};
+	\node [Block, below of=init] (startDMA) {START DMA P\_IN0, P\_IN1, P\_IN2};
+	\node [block, below of=startDMA] (iret) {IRET};
+	\node [below of=iret] (interrupt) {};
+	\path [line] (interrupt)+(1.75,1) node[anchor=west, yshift=2] {EOP from DMAC CH0,CH1 or CH2} -- +(.75,.25) -- +(1,.75) -- (interrupt);
+	\node [Block, below of=iret, yshift=-1cm, text width=6em] (incr) {$N_T\leftarrow N_T+1$};
+	\node [decision, below of=incr, yshift=+1cm] (end?) {$N_T<3$};
+	\node [Block, below of=end?, yshift=-.5cm] (mask) {Mask IR0,IR1,IR2};
+	\node [Block, below of=mask, text width=14em] (exe) {RIS = (A1 OR A2) AND A3};
+	\node [block, below of=exe] (call) {CALL T1};
+	\node [block, left of=call, xshift=-2cm] (eoi) {EOI, IRET};
+	
+	\path [line] (start) -- (prog);
+	\path [line] (prog) -- (unmask);
+	\path [line] (unmask) -- (init);
+	\path [line] (init) -- (startDMA);
+	\path [line] (startDMA) -- (iret);
+	\path [line] (iret) -- (incr);
+	\path [line] (incr) -- (end?);
+	\path [line] (end?) -- node [near start] {no} (mask);
+	\path [line] (end?) -- node [near start] {yes} +(-2,0) |- (iret);
+	\path [line] (mask) -- (exe);
+	\path [line] (exe) -- (call);
+	\path [line] (call) -- (eoi);
+	\path [line] (eoi) |- (start);
+	
+\end{tikzpicture}
+\end{figure}
+
+La \textit{flow chart} del task \textbf{T1} è rappresentata in figura \vref{flow:T1}. Il comportamento è analogo al task T0, ad eccezione del fatto che si deve preoccupare solo del canale DMAC CH3 e delle richieste di \textit{interrupt} da IR3. Non deve operare su alcuna variabile interna, poiché il trasferimento è su una sola porta, né fare alcun altro tipo di operazione. Di conseguenza, al termine della trasmissione, restituisce il controllo al task T0.
+
+\begin{figure}[htbp]
+\centering
+\caption{Flow chart del task \textbf{T1}}
+\label{flow:T1}
+\begin{tikzpicture}[node distance = 1.5cm, auto]
+
+	\node [cloud] (start) {\textbf{Task T1}};
+	\path [line] (start)+(1.75,1+.2) node[anchor=west, yshift=2] {Call from T0} -- +(.75,.25+.2) -- +(1,.75+.2) -- (start);
+	\node [Block, below of=start] (prog) {DMAC CH3 programming};
+	\node [Block, below of=prog] (unmask) {Unmask CH3 and IR3};
+	\node [Block, below of=unmask] (DMAstart) {START DMA S\_OUT0};
+	\node [block, below of=DMAstart] (iret) {IRET};
+	\node [below of=iret] (interrupt) {};
+	\path [line] (interrupt)+(1.75,1) node[anchor=west, yshift=2] {EOP from DMAC CH3} -- +(.75,.25) -- +(1,.75) -- (interrupt);
+	\node [Block, below of=iret, yshift=-1cm, text width=6em] (call) {CALL T1};
+	\node [block, below of=call] (eoi) {EOI, IRET};
+	
+	\path [line] (start) -- (prog);
+	\path [line] (prog) -- (unmask);
+	\path [line] (unmask) -- (DMAstart);
+	\path [line] (DMAstart) -- (iret);
+	\path [line] (iret) -- (call);
+	\path [line] (call) -- (eoi);
+	\path [line] (eoi) -- +(-3,0) |- (start);	
+	
+\end{tikzpicture}
+\end{figure}
+
+La sequenza dei \textit{task running}, infine, è la seguente:
+$$
+T_I \rightarrow T_0 \rightarrow \underbrace{T_I\rightarrow T_0}_{\times 3} \rightarrow T_1 \rightarrow T_I \rightarrow T_1 \rightarrow T_0 \rightarrow\ldots
+$$
+\subsection{Gestione degli interrupt}
+
+Gli interrupt non possono essere persi grazie all'interfacciamento che abbiamo dotato e alla capacità del PIC di funzionare in \textit{positive edge triggered mode}, ovvero di riconoscere un'\textit{interrupt} quando su un piedino IRi \textbf{non mascherato} vi è un fronte di salita, anziché riconoscerlo quando è presente un 1 logico.
+Utilizzando come input per IRi l'OR tra EOP\# e DACKi\#, questo è sempre garantito, poiché per avere un fronte positivo bisogna avere prima entrambi i segnali attivi bassi, dopodiché se ne deve disattivare uno. Nel nostro caso, ovviamente, EOP\# si pone attivo basso solo se il corrispondente DACKi\# è già attivo basso, portandosi poi al livello logico alto e facendo avvenire il fronte di salita sul piedino IRi del PIC.
+Nel grafico in figura \vref{plot:pic} è esemplificato il caso in cui due canali terminino la loro transizione. Anche se DACK1\# è attivo basso, nessun interrupt viene inviato al PIC finché non avviene il trasferimento dell'ultimo byte e viene generato il segnale EOP\#. Quando in $t_1$ il segnale EOP\# torna alto, avviene un fronte positivo sul piedino IR1 del PIC e viene servito il corrispondente interrupt. Stesso discorso può farsi per il canale CH0, con il segnale DACK0\# e EOP\#.
+
+\begin{figure}[htbp!]
+\centering
+\def\svgwidth{\columnwidth}
+\import{figure/}{picedge.pdf_tex}
+\caption{Segnali in ingresso al PIC.}
+\label{plot:pic}
+\end{figure}
+
+Se i trasferimenti in scrittura sono tutti ultimati, il task T0 maschera IR0, IR1 e IR2 e nessuno di questi interrupt verrà più servito.
+
+\subsection{Note e possibili errori}
+
+Questa parte di esercizio è \textit{oscura} in alcuni punti. Mi sono personalmente venuti in mente degli errori o dei modi diversi per risolverlo. Finché non avverrà la correzione ufficiale dell'esame, sottopongo le mie perplessità e gli eventuali modi alternativi di procedere.
+\begin{itemize}
+\item In linea teorica, credo si potesse configurare il DMAC anche in \textit{block mode}. Secondo me, però, avrebbe minato la concorrenza delle operazioni. 
+\item È corretto utilizzare un unico interrupt per tutti i trasferimenti in scrittura dalle porte parallele? Il \textbf{notevole dubbio} che mi è venuto in mente è il seguente: se, ad esempio, la porta P\_IN0 finisce il suo trasferimento molto prima delle altre due, IR0 rimane \textbf{smascherato} e le probabilità che giungano nuovi dati sono tutt'altro che nulle. Quindi si attiverebbe \textbf{una seconda transazione sul canale CH0}, sovrascrivendo il dato precedente. Invece, dovremmo attendere che \textbf{tutte le scritture} siano terminate e che \textbf{siano state svolte le operazioni vettoriali}. La mia idea, quindi, era di \textbf{utilizzare un INT\_TYPE differente per ogni canale}. In tal caso...come cambia la flow chart? Personalmente non so come rappresentare la seguente sequenza di istruzioni (in pseudocodice):
+\begin{verbatim}
+while(N_T < 3)
+do
+    IRET;
+    waitFor(interrupt);
+    int channel <- interrupt.type-30H;
+    maskInterruptChannel(channel);
+    N_T <- N_T+1
+od;
+RIS=(A1+A2)*A3;
+CALL T1;
+EOI;
+IRET; 
+\end{verbatim}
+\textbf{Ogni proposta è ben accetta!!!}
+\end{itemize}\
+
+\section{Esercizio 4 - Punti -2...1}
+
+La ricezione avviene in maniera \textit{concorrente} e \textbf{non parallela}. È importante non fare confusione tra i due concetti, perché avendo un unico bus che viene ceduto \textit{a turno} a ogni canale del DMAC, la ricezione avviene comunque serialmente.
+
+Siano $v_P = 2\mathrm{KB/s}$ la velocità della porta parallela e $v_S = 9600\mathrm{b/s}$ la velocità della porta seriale, il tempo totale $T$ per la ricezione di tre vettori tramite porta parallela e la trasmissione di un quarto vettore sulla porta seriale, tutti della stessa dimensione $d = 2\mathrm{KB}$ è:
+$$
+T=\frac{3d}{v_P}+\frac{d}{v_S}=\frac{6\cdot 2^{10}}{2\cdot 2^{10}}+\frac{2\cdot 2^{10}}{9600}=3,21\mathrm{s}
+$$
+Durante le trasmissioni/ricezioni la CPU è in stato di \textit{HALT}, ovvero viene sospesa in attesa della prossima interruzione esterna.
+
+\textbf{N.B.:} sembra che questa risposta al professore non basti e valga ''solo'' $0.5$ punti su $1$. Attendo una segnalazione da qualcuno del perché o direttamente la correzione del prof.
+
+\section{Esercizio 5}
+\subsection{Punto (a)}
+Siano:
+\newcommand{\SID}{{\mathrm{SID}}}
+\begin{description}
+\item[$N_O$] Il numero di bit del campo \textit{OFFSET} 
+\item[$N_\SID$] Il numero di bit del campo \textit{SET\_ID} 
+\item[$N_T$] Il numero di bit del campo \textit{TAG} 
+\item[$|l|$] La lunghezza, \textit{in byte}, di una linea di cache 
+\item[$|C|$] La dimensione totale, \textit{in byte}, della cache 
+\item[$N_S$] Il numero di \textit{set} della cache.
+\end{description}
+Valgono le seguenti relazioni:
+\begin{align*}
+N_O & = \log_2 |l| \\
+N_\SID & = \log_2 \left[ \frac{|C|}{|l|N_S} \right] \\
+N_T & = 32 - N_O - N_\SID
+\end{align*}
+Nel nostro caso abbiamo quindi:
+\begin{align*}
+N_O & = 5 \\
+N_\SID & = 7 \\
+N_T & = 20 \\
+\end{align*}
+In tabella \vref{tab:cacheSet} vengono riportati tutti i campi per il primo e l'ultimo byte di A1, A2, A3 e RIS: è facile notare che A1 e A2 riempiono tutti le linee di una via di cache. A3 e RIS hanno gli stessi \textit{SET\_ID} di A1 e A2, ma essendo la nostra cache a \textit{due vie}, saranno memorizzata nella seconda via di cache senza sovrascrivere il contenuto della via precedentemente riempita da A1 e A2.
+
+\begin{table}
+\centering
+\caption{Campi di cache per i vettori A1, A2, A3 e RIS}
+\label{tab:cacheSet}
+\begin{tabular}{l|c|c@{ }|@{ }c@{ }|@{ }c}
+\toprule
+ & Hex value & \textit{TAG} & \textit{SET\_ID} & \textit{OFFSET} \\
+\midrule
+A1(0) 		& \hex{0001\,0000} & \verb|0000 0000 0000 0001 0000| & \verb|0000 000| & \verb|0 0000| \\
+A1(2K-1) 	& \hex{0001\,07FF} & \verb|0000 0000 0000 0001 0000| & \verb|0111 111| & \verb|1 1111| \\
+A2(0) 		& \hex{0001\,0800} & \verb|0000 0000 0000 0001 0000| & \verb|1000 000| & \verb|0 0000| \\
+A2(2K-1) 	& \hex{0001\,0FFF} & \verb|0000 0000 0000 0001 0000| & \verb|1111 111| & \verb|1 1111| \\
+A3(0) 		& \hex{0001\,1000} & \verb|0000 0000 0000 0001 0001| & \verb|0000 000| & \verb|0 0000| \\
+A3(2K-1) 	& \hex{0001\,17FF} & \verb|0000 0000 0000 0001 0001| & \verb|0111 111| & \verb|1 1111| \\
+RIS(0) 		& \hex{0001\,1800} & \verb|0000 0000 0000 0001 0001| & \verb|1000 000| & \verb|0 0000| \\
+RIS(2K-1) 	& \hex{0001\,1FFF} & \verb|0000 0000 0000 0001 0001| & \verb|1111 111| & \verb|1 1111| \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Punto (b)}
+La risposta a questa domanda è semplice: \textbf{la cache è tutta vuota e in stato \textit{I (Invalid)}}.
+Questo è vero \textbf{indipendentemente dal tipo di politica adottata dalla cache}. Il motivo è che i vettori A1, A2 e A3 vengono scritti in DMA, e il DMAC \textit{non può accedere in alcun modo alla cache interna della CPU}. Perciò, se assumiamo che il sistema sia stato appena avviato, la cache permano nel suo stato \textit{I}.
+
+\subsection{Punto (c)}
+I problemi iniziano qui. Di primo acchito, il codice \textit{DLX-assembly}, in cui con \verb|*| indicheremo esplicitamente un accesso in memoria, per eseguire le operazioni vettoriali (o, per meglio dire, per fare l'operazione sul primo byte, supponendo le altre 2047 praticamente uguali) è il seguente:
+\begin{verbatim}
+lb  ax, A1(0)*
+or  bx, ax, A2(0)*
+and cx, bx, A3(0)*
+sb  RIS(0)*, cx
+\end{verbatim}
+Analizziamo il codice per calcolarne la \textit{miss rate}. Le istruzioni \verb|lb|, \verb|or| e \verb|and| causano \textit{3 read miss}. Quello che accade è semplice, cioè vengono caricate in cache le rispettive linee, quindi tutti gli elementi dei vettori con \textit{gli indici da 0 a 31}. Fin qui, \textbf{tutto ok}, quando giungeremo all'indice 32 si ripeterà la stessa operazione con gli indici da 32 a 63 e così via fino alla fine dei vettori. \textbf{Per ora}, abbiamo una miss ogni 32 letture, mantenendo una \textit{read miss rate} $M_R(R) = \frac{1}{32} = 3.125\%$.
+
+L'operazione \verb|sb| è una trappola (figura \ref{fig:trap}).
+
+\begin{figure}[h!]
+\centering
+\caption{\textbf{It's a trap!}}
+\label{fig:trap}
+\includegraphics[scale=0.5]{figure/itsatrap}
+\end{figure}
+
+Saremmo tentati di pensare che la CPU, non trovando RIS(0) in cache, importi nella linea i byte da RIS(0) a RIS(32). \textbf{Ma non è così!}.
+Infatti, se controlliamo il testo dell'esame, è stato specificato che stiamo lavorando in politica \textit{write-around} in caso di \textit{write miss}. Questo significa che \textbf{\textit{se un dato da scrivere non viene trovato in cache, viene aggiornato direttamente il dato in memoria. Nessuna linea di cache viene caricata.}}
+Questo, ahinoi, è un problema. Perché significa che \textit{tutte} le istruzioni \verb|sb| generano una \textit{write miss}. Su 32 operazioni, avremo 32 scritture e 32 miss, quindi il \textit{write miss rate} sarà, ovviamente, $M_R(W)=100\%$.
+Il \textit{miss rate totale} sarà la media pesata del \textit{read miss rate} e del \textit{write miss rate}. Ogni quattro accessi in memoria, avremo 3 accessi in lettura e 1 in scrittura, perciò:
+$$
+M_R=\frac{3M_R(R)+M_R(W)}{4}=\frac{9.375\% + 100\%}{4}\approx 27.34\%
+$$
+Più di una volta su quattro, abbiamo una miss, una situazione molto indesiderabile. \textbf{Come risolviamo il problema?}
+
+Una soluzione potrebbe essere quella di cambiare la politica in caso di \textit{write miss}. Questo funzionerebbe ma potrebbe non essere possibile se, ad esempio, la macchina per la quale dobbiamo scrivere il programma non è in nostro possesso oppure se per altri motivi progettuali dobbiamo tenerci la politica di \textit{write around}. Ci serve una strada alternativa.
+
+La nostra via d'uscita risiede nel fatto che \textit{non ci è stato specificato alcun vincolo sulle politiche in caso di write hit}. Questo è un bene, perché abbiamo libertà di scelta. E la nostra scelta ricadrà su una politica di tipo \textit{write back}, cioè scriveremo un dato solo in cache nel caso questo vi sia già presente. Il nostro compito sarà quindi di \textbf{fare in modo che il vettore RIS sia presente in cache quando andiamo a sovrascriverlo}. L'unico modo, è quello di \textbf{forzare una read sul vettore RIS costringendo la macchina a importarlo in cache.} Questo è fattibile aggiungendo un'istruzione \verb|lb cx, RIS(0)|. Il codice diventa il seguente:
+
+\begin{verbatim}
+lb  ax, A1(0)*
+or  bx, ax, A2(0)*
+lb  cx, RIS(0)*
+and cx, bx, A3(0)*
+sb  RIS(0)*, cx
+\end{verbatim}
+
+Come è reso evidente dal codice, questa volta abbiamo 5 accessi in memoria per ogni operazione su byte. In compenso, avremo solo \textit{4 miss ogni 32 operazioni su byte}, ovvero il più piccolo numero di miss possibile. Questo perché anche nella più ottimistica della cache, dobbiamo avere una miss per ogni linea di cache, cioè la miss che causerà il caricamento della linea stessa.
+Ricordando che ogni vettore è composto da $2^{11}\mathrm{B}$, il miss rate totale, calcolato come il \textit{rapporto tra il numero di miss e il numero di accessi totali} è:
+$$
+M_R=\frac{4\frac{2^{11}}{32}}{5\cdot 2^{11}}=\frac{4\cdot 2^6}{2^{11}}=\frac{2^8}{5 \cdot 2^11}=\frac{1}{5} 2^{-3}=\frac{1}{40}=2.5\%
+$$
+Ed ecco a noi il miss rate richiesto dalla traccia che, in base alle precedenti osservazioni, è anche il minimo possibile. Senza fare le semplificazioni aritmetiche, il numero di miss $N_M$ e il numero di accessi totali in memoria $N_A$ sono:
+\begin{align*}
+N_M & = 4\frac{2^{11}}{32} = 4 \cdot 2^6 = 2^8 = 256 \\
+N_A & = 5\cdot 2^{11} = 10240
+\end{align*}
+
+\subsection{Punto (d)}
+Il principio di località temporale in questo caso è rispettato ma molto poco influente. Quando effettuiamo la \verb|lb cx, RIS(0)|, il principio di località temporale ci permette di riutilizzare la cache poco dopo con l'istruzione \verb|sb RIS(0), cx|. La natura del problema in realtà nasconde questa proprietà, che è stata introdotta da noi artificialmente per permettere un uso più efficiente della cache riducendo gli accessi in memoria.
+Senza questo artificio, la località temporale sarebbe stata completamente ininfluente in quanto ogni vettore viene utilizzato solo una volta.
+
+N.B.: se tutta l'operazione viene ripetuta una seconda volta, le linee di cache che contengono RIS sono ancora valide e l'istruzione \verb|lb cx, RIS(0)| \textit{non genera più una miss}. Rifacendo i calcoli, si può verificare che la miss rate, restando così il codice, scende all'$1.875\%$ proprio grazie al principio di località temporale. Se invece volessimo sfruttare, dalla seconda operazione in poi, un secondo programma che elimina l'istruzione \verb|lb cx, RIS(0)|, la miss rate salirebbe al $2.34\%$ ma in realtà le prestazioni aumenterebbero perché diminuirebbero sia il numero di miss che il numero di accessi totali. Questa seconda soluzione è comunque \textbf{sconsigliata} perché richiede un secondo programma e perché nel caso in cui le linee di cache in cui risiede il vettore RIS andassero sovrascritte da un altro programma esterno, si riavrebbe il caso di partenza con una serie continua di write miss.
+
+Il principio di località spaziale, invece, vale e viene ampliamente sfruttato. Tutti i byte su cui andiamo ad operare si trovano a indirizzi contigui, perciò ogniqualvolta importiamo una linea di cache, tutti i byte che stiamo importando \textit{saranno effettivamente utilizzati} in un futuro prossimo.
+
+\subsection{Punto (e)}
+Rispetto ai punti precedenti, questo è di una semplicità disarmante. L'unico caso in cui si renderanno necessari cicli di write back è all'inizio della trasmissione di RIS sulla porta seriale. Quando il DMAC cerca di trasferire il dato, la CPU riporta in memoria tutte le linee di cache in cui risiede RIS. Ogni ciclo di write back porta in memoria $8$B e risiedendo tutti i 2KB del vettore RIS in cache, saranno necessari $N_{\mathrm{WB}}=\frac{2^{11}}{2^3} = 2^8 = 256$ cicli di write back.
+
+\subsection{Punto (f)}
+Con una cache da 16KB la situazione non avrebbe subito alcuna modifica. 8KB di cache sono già sufficiente a gestire tutti e 4 i vettori senza alcuna sovrascrittura.
+
+Diverso sarebbe il caso con una cache da 4KB. Le sovrascritture avrebbero reso praticamente inutile la cache, perché si potrebbero mantenere contemporaneamente in cache solo 2 vettori alla volta (a causa della presenza di due sole vie), diciamo A1 e A2, dovendo sovrascrivere ogni linea ogni volta che si caricano i due successivi vettori A3 e RIS. Questo nel corso della stessa operazione. Al byte successivo A1 e A2 sovrascrirrebbero di precedenti A3 e RIS perché sarebbero sulla stessa linea di cache. Avremmo una miss rate del $100\%$ o quasi. L'ultima istruzione di \verb|sb| in realtà potrebbe andare a buon fine in cache, ma andrebbe fatto poco dopo un write back perché quella linea andrebbe sovrascritta poco dopo. Solo una volta su 32 non sarà richiesto il write back, cioè quando si opera sull'ultimo byte in linea di cache e si passa alla successiva. Tanto varrebbe utilizzare il assembly codice originale per ridurre le istruzioni, visto che gli accessi in memoria passerebbero da circa 5 per operazione a 4 per operazione. Ancora meglio sarebbe disabilitare la cache, visto la sua completa inutilità in questo caso.
+
+Per un'idea più precisa dell'evoluzione della cache in questo caso, si faccia riferimento alla tabella \vref{tab:MESI} che esprime, anche se non richiesto dall'esame, anche l'evoluzione degli stati \textit{MESI}.
+
+\newcommand{\ts}[1]{\textsubscript{#1}}
+\newcommand{\ra}{$\rightarrow$}
+\begin{table}
+\centering
+\caption{Evoluzione della cache per le prime 33 operazioni su byte}
+\label{tab:MESI}
+\begin{tabular}{l|ccccccr}
+\toprule
+Code & M/H & Set & Set\ts{ID} & Offset & TAG & L/WB & MESI\\
+\midrule
+\verb|lb ax, A1(0)| 		& RM & 0 & \hex{00} & \hex{00} & \hex{20} & L[A1(0-31)] 	& I \ra E\\
+\verb|or bx, ax, A2(0)| 	& RM & 1 & \hex{00} & \hex{00} & \hex{20} & L[A2(0-31)] 	& I \ra E\\
+\verb|lb cx, RIS(0)| 		& RM & 0 & \hex{00} & \hex{00} & \hex{20} & L[RIS(0-31)]	& E\\
+\verb|and cx, bx, A3(0)| 	& RM & 1 & \hex{00} & \hex{00} & \hex{20} & L[A3(0-31)] 	& E\\
+\verb|sb RIS(0), cx| 		& WH & 0 & \hex{00} & \hex{00} & \hex{20} &				& E \ra M\\
+\verb|lb ax, A1(1)| 		& RM & 0 & \hex{00} & \hex{01} & \hex{20} & WB(\hex{00},0)& M \ra S \\
+							&	 &   &			 &			&		   & L[A1(0-31)] 	& S \ra E\\
+\verb|or bx, ax, A2(1)| 	& RM & 1 & \hex{00} & \hex{01} & \hex{20} & L[A2(0-31)] 	& E\\
+\verb|lb cx, RIS(1)| 		& RM & 0 & \hex{00} & \hex{01} & \hex{20} & L[RIS(0-31)]	& E\\
+\verb|and cx, bx, A3(1)| 	& RM & 1 & \hex{00} & \hex{01} & \hex{20} & L[A3(0-31)]	& E\\
+\verb|sb RIS(1), cx| 		& WH & 0 & \hex{00} & \hex{01} & \hex{20} & 				& E \ra M\\
+\verb|lb ax, A1(2)| 		& RM & 0 & \hex{00} & \hex{02} & \hex{20} & WB(\hex{00},0)& M \ra S\\
+							&	 &   &			 &			&		   & L[A1(0-31)] 	& S \ra E\\
+\verb|or bx, ax, A2(2)| 	& RM & 1 & \hex{00} & \hex{02} & \hex{20} & L[A2(0-31)] 	& E\\
+\verb|lb cx, RIS(2)| 		& RM & 0 & \hex{00} & \hex{02} & \hex{20} & L[RIS(0-31)]	& E\\
+\verb|and cx, bx, A3(2)| 	& RM & 1 & \hex{00} & \hex{02} & \hex{20} & L[A3(0-31)]	& E\\
+\verb|sb RIS(2), cx| 		& WH & 0 & \hex{00} & \hex{02} & \hex{20} & 				& E \ra M\\
+\verb|lb ax, A1(1)| 		& RM & 0 & \hex{00} & \hex{01} & \hex{20} & WB(\hex{00},0)& M \ra S\\
+							&	 &   &			 &			&		   & L[A1(0-31)]	& S \ra E\\
+\ldots 	& \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\
+\verb|lb ax, A1(31)| 		& RM & 0 & \hex{00} & \hex{1F} & \hex{20} & WB(\hex{00},0)& M \ra S\\
+							&	 &   &			 &			&		   & L[A1(0-31)] 	& S \ra E\\
+\verb|or bx, ax, A2(31)| 	& RM & 1 & \hex{00} & \hex{1F} & \hex{20} & L[A2(0-31)] 	& E\\
+\verb|lb cx, RIS(31)| 		& RM & 0 & \hex{00} & \hex{1F} & \hex{20} & L[RIS(0-31)]	& E\\
+\verb|and cx, bx, A3(31)| 	& RM & 1 & \hex{00} & \hex{1F} & \hex{20} & L[A3(0-31)]	& E\\
+\verb|sb RIS(31), cx| 		& WH & 0 & \hex{00} & \hex{1F} & \hex{20} & 				& E \ra M\\
+\verb|lb ax, A1(32)| 		& RM & 0 & \hex{01} & \hex{00} & \hex{20} & L[A1(32-63)] 	& I \ra E\\
+\verb|or bx, ax, A2(32)| 	& RM & 1 & \hex{01} & \hex{00} & \hex{20} & L[A2(0-31)] 	& I \ra E\\
+\verb|lb cx, RIS(32)| 		& RM & 0 & \hex{01} & \hex{00} & \hex{20} & L[RIS(0-31)]	& I \ra E\\
+\verb|and cx, bx, A3(32)| 	& RM & 1 & \hex{01} & \hex{00} & \hex{20} & L[A3(0-31)]	& I \ra E\\
+\verb|sb RIS(32), cx| 		& WH & 0 & \hex{01} & \hex{00} & \hex{20} & 				& E \ra M\\
+\verb|lb ax, A1(33)| 		& RM & 0 & \hex{01} & \hex{01} & \hex{20} & WB(\hex{01},0)& M \ra S\\
+							&	 &   &			 &			&		   & L[A1(32-63)] 	& S \ra E\\
+\verb|or bx, ax, A2(33)| 	& RM & 1 & \hex{01} & \hex{01} & \hex{20} & L[A2(32-63)] 	& E\\
+\ldots 	& \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

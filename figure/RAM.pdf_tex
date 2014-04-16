@@ -1,0 +1,64 @@
+%% Creator: Inkscape 0.48.3.1, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'RAM.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{264.72175584bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.5768757)%
+    \put(0,0){\includegraphics[width=\unitlength]{RAM.pdf}}%
+    \put(-0.06387603,0.29614332){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.25363557\unitlength}\raggedleft CS\_RAM\#\end{minipage}}}%
+    \put(-0.01033955,0.24260324){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.18196683\unitlength}\raggedleft BEi\#\end{minipage}}}%
+    \put(0.52127717,0.581124){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.16297435\unitlength}\centering BA[31...3]\end{minipage}}}%
+    \put(0.49508715,0.03752027){\color[rgb]{0,1,0}\makebox(0,0)[lt]{\begin{minipage}{0.21532386\unitlength}\centering BD[8i...8i+7]\end{minipage}}}%
+    \put(0.47231575,0.23642529){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{CS*}}}%
+    \put(0.73256736,0.23642529){\color[rgb]{0,0,0}\makebox(0,0)[rb]{\smash{OE*}}}%
+    \put(0.47987251,0.32465983){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.24574417\unitlength}\centering {\Huge RAMi \par}\end{minipage}}}%
+    \put(0.73332794,0.34371471){\color[rgb]{0,0,0}\makebox(0,0)[rb]{\smash{WR*}}}%
+    \put(0.79889852,0.23642529){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{MEMRDC\#}}}%
+    \put(0.79889852,0.3435055){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{MEMWRC\#}}}%
+  \end{picture}%
+\endgroup%

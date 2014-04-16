@@ -1,0 +1,79 @@
+%% Creator: Inkscape 0.48.3.1, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'seriale.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{421.5089175bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.40363277)%
+    \put(0,0){\includegraphics[width=\unitlength]{seriale.pdf}}%
+    \put(0.35682578,0.27446153){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright A2\end{minipage}}}%
+    \put(0.35736377,0.20721156){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright A1\end{minipage}}}%
+    \put(0.35682578,0.13996162){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright A0\end{minipage}}}%
+    \put(0.77116184,0.25762171){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 1\end{minipage}}}%
+    \put(0.77217859,0.22368726){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 0\end{minipage}}}%
+    \put(0.85628535,0.25965522){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.09441749\unitlength}\raggedright DACK3\end{minipage}}}%
+    \put(0.8554677,0.22518278){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.16812527\unitlength}\raggedright CS\_S\_OUT0\end{minipage}}}%
+    \put(-0.02532568,0.27518121){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.10200925\unitlength}\raggedleft HOLDA\end{minipage}}}%
+    \put(0.45398943,0.02356399){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.12858047\unitlength}\centering IOB[7...0]\end{minipage}}}%
+    \put(0.18315278,0.22536965){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 1\end{minipage}}}%
+    \put(0.18416953,0.19143521){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 0\end{minipage}}}%
+    \put(0.18378774,0.09072123){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 1\end{minipage}}}%
+    \put(0.18480449,0.0567868){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 0\end{minipage}}}%
+    \put(-0.0208755,0.22750205){\color[rgb]{0,1,0}\makebox(0,0)[lt]{\begin{minipage}{0.12858047\unitlength}\raggedleft BA1\end{minipage}}}%
+    \put(-0.02006576,0.08990116){\color[rgb]{0,1,0}\makebox(0,0)[lt]{\begin{minipage}{0.12858047\unitlength}\raggedleft BA0\end{minipage}}}%
+    \put(0.45075243,0.12616705){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.1352339\unitlength}\centering D[7...0]\end{minipage}}}%
+    \put(0.75725308,0.1754862){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.10159087\unitlength}\raggedright DREQ3\end{minipage}}}%
+    \put(0.48415226,0.29931219){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\centering WR*\end{minipage}}}%
+    \put(0.41724976,0.39000031){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.20246581\unitlength}\centering IOWRC\#\end{minipage}}}%
+    \put(0.61632928,0.24083654){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedleft CS*\end{minipage}}}%
+    \put(0.56548146,0.17521079){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.1205986\unitlength}\raggedleft SRQ\end{minipage}}}%
+    \put(0.47104463,0.21998828){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.09489716\unitlength}\centering S\_OUT0\end{minipage}}}%
+    \put(0.18410883,0.35988615){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 1\end{minipage}}}%
+    \put(0.18512558,0.32595171){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06866968\unitlength}\raggedright 0\end{minipage}}}%
+    \put(-0.01991946,0.36201855){\color[rgb]{0,1,0}\makebox(0,0)[lt]{\begin{minipage}{0.12858047\unitlength}\raggedleft BA2\end{minipage}}}%
+  \end{picture}%
+\endgroup%
