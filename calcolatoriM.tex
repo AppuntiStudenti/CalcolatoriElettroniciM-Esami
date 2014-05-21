@@ -179,7 +179,7 @@ Lo schema a blocchi è quello in figura \vref{fig:S}, mentre il segmento dati SD 
 	
 	\hex{1\,07FF} & \rowstyle{\leavevmode\color{YellowOrange}}%
 		A1(2K-1) & A1(2K-2) & ... & ... & ... & ... & ... & A1(2K-8) & %
-	\hex{1\,0FF8} \\
+	\hex{1\,07F8} \\
 	\cline{2-9}
 	
 	... & \rowstyle{\leavevmode\color{YellowOrange}}%
@@ -200,13 +200,13 @@ Lo schema a blocchi è quello in figura \vref{fig:S}, mentre il segmento dati SD 
 \label{tab:memoria}
 \end{table}
 
-In codice assembly il segmento è così definito:
+In codice assembly il segmento è così definito:\footnote{È importante utilizzare \texttt{db} anziché \texttt{w} per una correttezza \emph{semantica}, dato che il problema è impostato con il byte come unità di misura}
 \begin{verbatim}
 SD segment at 10000H
-    A1  w   1024dup
-    A2  w   1024dup
-    A3  w   1024dup
-    RIS w   1024dup
+    A1  db   1024dup
+    A2  db   1024dup
+    A3  db   1024dup
+    RIS db   1024dup
 SD ends
 \end{verbatim}
 Il segmento parte all'indirizzo \hex{1\,0000} ed è composto da 4 vettori di 2KB l'uno, per un totale 8KB. L'offset del segmento è quindi:
@@ -281,7 +281,8 @@ Come prologo al nostro interfacciamento, è utile preporre l'encoder in figura \v
 \end{figure}
 
 \subsection{Porte parallele P\_INi}
-Tutte le porte parallele si interfacciano allo stesso modo. Notare, in figura \vref{fig:parallel}, che i segnali CS\_P\_IN, BA0 e BA1 non sono direttamente interfacciati con la porta, ma in \textit{multiplexing} con DACKi il \textit{chip select} e con la massa i BA[0,1]. Tutti i multiplexer sono controllati dal segnale HOLDA inviato dalla CPU. Questo per far sì che il dispositivo sia attivo solo quando il DMAC ha ottenuto il controllo del bus.
+Tutte le porte parallele si interfacciano allo stesso modo. Notare, in figura \vref{fig:parallel}, che i segnali CS\_P\_IN e BA0 non sono direttamente interfacciati con la porta, ma in \textit{multiplexing} con DACKi il \textit{chip select} e con la massa i BA0. Tutti i multiplexer sono controllati dal segnale HOLDA inviato dalla CPU. Questo per far sì che il dispositivo sia attivo solo quando il DMAC ha ottenuto il controllo del bus.
+Non serve interfacciare BA1 con il pin A1 perché la porta gestisce un solo bit alla volta e quindi non serve indirizzarne due. Se avessimo avuto due byte in ingresso, avremmo lasciato in questo modo il pin A0 e interfacciato direttamente il pin A1 con BA1.
 Infine, il segnale SRQ è inviato al DREQi del DMAC. Se le porte fossero state gestite ad interrupt, i segnali sarebbero dovuti essere inviati ai piedini IRi del PIC. Ma, ancora una volta, \textbf{non è questo il nostro caso}.
 
 \begin{figure}[htbp!]
@@ -475,11 +476,12 @@ In figura \vref{flow:T0} è rappresentata la \textit{flow chart} del task di rice
 	\node [below of=iret] (interrupt) {};
 	\path [line] (interrupt)+(1.75,1) node[anchor=west, yshift=2] {EOP from DMAC CH0,CH1 or CH2} -- +(.75,.25) -- +(1,.75) -- (interrupt);
 	\node [Block, below of=iret, yshift=-1cm, text width=6em] (incr) {$N_T\leftarrow N_T+1$};
+	\node [block, left of=incr, xshift=-2cm] (eoi) {EOI};
 	\node [decision, below of=incr, yshift=+1cm] (end?) {$N_T<3$};
-	\node [Block, below of=end?, yshift=-.5cm] (mask) {Mask IR0,IR1,IR2};
-	\node [Block, below of=mask, text width=14em] (exe) {RIS = (A1 OR A2) AND A3};
+	%\node [Block, below of=end?, yshift=-.5cm] (mask) {Mask IR0,IR1,IR2};
+	\node [Block, below of=end?, yshift=-.5cm, text width=14em] (exe) {RIS = (A1 OR A2) AND A3};
 	\node [block, below of=exe] (call) {CALL T1};
-	\node [block, left of=call, xshift=-2cm] (eoi) {EOI, IRET};
+	\node [block, left of=call, xshift=-4cm] (eoiret) {EOI, IRET};
 	
 	\path [line] (start) -- (prog);
 	\path [line] (prog) -- (unmask);
@@ -488,12 +490,13 @@ In figura \vref{flow:T0} è rappresentata la \textit{flow chart} del task di rice
 	\path [line] (startDMA) -- (iret);
 	\path [line] (iret) -- (incr);
 	\path [line] (incr) -- (end?);
-	\path [line] (end?) -- node [near start] {no} (mask);
-	\path [line] (end?) -- node [near start] {yes} +(-2,0) |- (iret);
-	\path [line] (mask) -- (exe);
+	\path [line] (end?) -- node [near start] {no} (exe);
+	\path [line] (end?) -| node [near start] {yes} (eoi);
+	\path [line] (eoi) |- (iret);
+	%\path [line] (mask) -- (exe);
 	\path [line] (exe) -- (call);
-	\path [line] (call) -- (eoi);
-	\path [line] (eoi) |- (start);
+	\path [line] (call) -- (eoiret);
+	\path [line] (eoiret) |- (start);
 	
 \end{tikzpicture}
 \end{figure}
@@ -514,7 +517,7 @@ La \textit{flow chart} del task \textbf{T1} è rappresentata in figura \vref{flow
 	\node [block, below of=DMAstart] (iret) {IRET};
 	\node [below of=iret] (interrupt) {};
 	\path [line] (interrupt)+(1.75,1) node[anchor=west, yshift=2] {EOP from DMAC CH3} -- +(.75,.25) -- +(1,.75) -- (interrupt);
-	\node [Block, below of=iret, yshift=-1cm, text width=6em] (call) {CALL T1};
+	\node [Block, below of=iret, yshift=-1cm, text width=6em] (call) {CALL T0};
 	\node [block, below of=call] (eoi) {EOI, IRET};
 	
 	\path [line] (start) -- (prog);
@@ -534,7 +537,8 @@ T_I \rightarrow T_0 \rightarrow \underbrace{T_I\rightarrow T_0}_{\times 3} \righ
 $$
 \subsection{Gestione degli interrupt}
 
-Gli interrupt non possono essere persi grazie all'interfacciamento che abbiamo dotato e alla capacità del PIC di funzionare in \textit{positive edge triggered mode}, ovvero di riconoscere un'\textit{interrupt} quando su un piedino IRi \textbf{non mascherato} vi è un fronte di salita, anziché riconoscerlo quando è presente un 1 logico.
+Gli interrupt non possono essere persi grazie all'interfacciamento che abbiamo dotato e alla capacità del PIC di funzionare in \textit{positive edge triggered mode}, ovvero di riconoscere un'\textit{interrupt} quando su un piedino IRi \textbf{non mascherato} vi è un fronte di salita, anziché riconoscerlo quando è presente un 1 logico. Inoltre siamo sicuri che mentre il task T0 è BUSY non giungano altri interrupt se settiamo a 0 il bit \emph{Interrupt-enable Flag} nel task gate. \emph{(La risposta fin qui è sufficiente come risposta all'esame, ciò che segue non serve ma è specificato per chiarezza espositiva.}
+
 Utilizzando come input per IRi l'OR tra EOP\# e DACKi\#, questo è sempre garantito, poiché per avere un fronte positivo bisogna avere prima entrambi i segnali attivi bassi, dopodiché se ne deve disattivare uno. Nel nostro caso, ovviamente, EOP\# si pone attivo basso solo se il corrispondente DACKi\# è già attivo basso, portandosi poi al livello logico alto e facendo avvenire il fronte di salita sul piedino IRi del PIC.
 Nel grafico in figura \vref{plot:pic} è esemplificato il caso in cui due canali terminino la loro transizione. Anche se DACK1\# è attivo basso, nessun interrupt viene inviato al PIC finché non avviene il trasferimento dell'ultimo byte e viene generato il segnale EOP\#. Quando in $t_1$ il segnale EOP\# torna alto, avviene un fronte positivo sul piedino IR1 del PIC e viene servito il corrispondente interrupt. Stesso discorso può farsi per il canale CH0, con il segnale DACK0\# e EOP\#.
 
@@ -546,42 +550,14 @@ Nel grafico in figura \vref{plot:pic} è esemplificato il caso in cui due canali 
 \label{plot:pic}
 \end{figure}
 
-Se i trasferimenti in scrittura sono tutti ultimati, il task T0 maschera IR0, IR1 e IR2 e nessuno di questi interrupt verrà più servito.
-
-\subsection{Note e possibili errori}
-
-Questa parte di esercizio è \textit{oscura} in alcuni punti. Mi sono personalmente venuti in mente degli errori o dei modi diversi per risolverlo. Finché non avverrà la correzione ufficiale dell'esame, sottopongo le mie perplessità e gli eventuali modi alternativi di procedere.
-\begin{itemize}
-\item In linea teorica, credo si potesse configurare il DMAC anche in \textit{block mode}. Secondo me, però, avrebbe minato la concorrenza delle operazioni. 
-\item È corretto utilizzare un unico interrupt per tutti i trasferimenti in scrittura dalle porte parallele? Il \textbf{notevole dubbio} che mi è venuto in mente è il seguente: se, ad esempio, la porta P\_IN0 finisce il suo trasferimento molto prima delle altre due, IR0 rimane \textbf{smascherato} e le probabilità che giungano nuovi dati sono tutt'altro che nulle. Quindi si attiverebbe \textbf{una seconda transazione sul canale CH0}, sovrascrivendo il dato precedente. Invece, dovremmo attendere che \textbf{tutte le scritture} siano terminate e che \textbf{siano state svolte le operazioni vettoriali}. La mia idea, quindi, era di \textbf{utilizzare un INT\_TYPE differente per ogni canale}. In tal caso...come cambia la flow chart? Personalmente non so come rappresentare la seguente sequenza di istruzioni (in pseudocodice):
-\begin{verbatim}
-while(N_T < 3)
-do
-    IRET;
-    waitFor(interrupt);
-    int channel <- interrupt.type-30H;
-    maskInterruptChannel(channel);
-    N_T <- N_T+1
-od;
-RIS=(A1+A2)*A3;
-CALL T1;
-EOI;
-IRET; 
-\end{verbatim}
-\textbf{Ogni proposta è ben accetta!!!}
-\end{itemize}\
-
 \section{Esercizio 4 - Punti -2...1}
 
-La ricezione avviene in maniera \textit{concorrente} e \textbf{non parallela}. È importante non fare confusione tra i due concetti, perché avendo un unico bus che viene ceduto \textit{a turno} a ogni canale del DMAC, la ricezione avviene comunque serialmente.
-
-Siano $v_P = 2\mathrm{KB/s}$ la velocità della porta parallela e $v_S = 9600\mathrm{b/s}$ la velocità della porta seriale, il tempo totale $T$ per la ricezione di tre vettori tramite porta parallela e la trasmissione di un quarto vettore sulla porta seriale, tutti della stessa dimensione $d = 2\mathrm{KB}$ è:
+La ricezione avviene in maniera \textit{concorrente}, perciò possiamo assumerla come parallela ai fini dei nostri calcoli poiché la velocità di trasferimento di un byte da una porta alla memoria è di svariati ordini di grandezza inferiore alla frequenza di arrivo dei dati nella porta.
+Siano $v_P = 2\mathrm{KB/s}$ la velocità della porta parallela e $v_S = 9600\mathrm{b/s}$ la velocità della porta seriale, il tempo totale $T$ per la ricezione di tre vettori tramite porta parallela e la trasmissione di un quarto vettore sulla porta seriale, tutti della stessa dimensione $d = 2\mathrm{KB}$ è:\footnote{Si faccia bene attenzione a non calcolare tre volte il tempo di ricezione. Le trasmissioni avvengono \emph{concorrentemente} e perciò conta il valore più alto tra tutti quelli in ricezione. Nel nostro caso sono tutti e tre uguali quindi uno qualsiasi andrà bene.}
 $$
-T=\frac{3d}{v_P}+\frac{d}{v_S}=\frac{6\cdot 2^{10}}{2\cdot 2^{10}}+\frac{2\cdot 2^{10}}{9600}=3,21\mathrm{s}
+T=\frac{d}{v_P}+\frac{d}{v_S}=\frac{2\cdot 2^{10}}{2\cdot 2^{10}}+\frac{2\cdot 2^{10}}{9600}=1,21\mathrm{s}
 $$
 Durante le trasmissioni/ricezioni la CPU è in stato di \textit{HALT}, ovvero viene sospesa in attesa della prossima interruzione esterna.
-
-\textbf{N.B.:} sembra che questa risposta al professore non basti e valga ''solo'' $0.5$ punti su $1$. Attendo una segnalazione da qualcuno del perché o direttamente la correzione del prof.
 
 \section{Esercizio 5}
 \subsection{Punto (a)}

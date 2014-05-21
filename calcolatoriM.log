@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.3.22)  15 APR 2014 23:04
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.3.22)  21 MAY 2014 18:29
 entering extended mode
 **calcolatoriM.tex
 ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\calcolatoriM.tex"
@@ -814,12 +814,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 82--92
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2]
 ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/systemschema.pdf_tex"
-<figure/systemschema.pdf, id=123, 565.23225pt x 305.97702pt>
+<figure/systemschema.pdf, id=119, 556.78235pt x 305.4673pt>
 File: figure/systemschema.pdf Graphic file (type pdf)
 
 <use figure/systemschema.pdf>
 Package pdftex.def Info: figure/systemschema.pdf used on input line 52.
-(pdftex.def)             Requested size: 427.43153pt x 231.3824pt.
+(pdftex.def)             Requested size: 427.43153pt x 234.51137pt.
 ) [3 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/systemschema.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 237--239
 
@@ -831,7 +831,7 @@ Overfull \hbox (5.72609pt too wide) in alignment at lines 269--269
  []
 
 ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/encoder8-3.pdf_tex"
-<figure/encoder8-3.pdf, id=137, 313.23785pt x 128.83131pt>
+<figure/encoder8-3.pdf, id=139, 313.23785pt x 128.83131pt>
 File: figure/encoder8-3.pdf Graphic file (type pdf)
 
 <use figure/encoder8-3.pdf>
@@ -839,7 +839,7 @@ Package pdftex.def Info: figure/encoder8-3.pdf used on input line 52.
 (pdftex.def)             Requested size: 427.43153pt x 175.80783pt.
 ) [4]
 ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/parallela.pdf_tex"
-<figure/parallela.pdf, id=149, 432.79723pt x 181.8293pt>
+<figure/parallela.pdf, id=150, 432.79723pt x 181.8293pt>
 File: figure/parallela.pdf Graphic file (type pdf)
 
 <use figure/parallela.pdf>
@@ -847,7 +847,7 @@ Package pdftex.def Info: figure/parallela.pdf used on input line 52.
 (pdftex.def)             Requested size: 427.43153pt x 179.57872pt.
 )
 ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/seriale.pdf_tex"
-<figure/seriale.pdf, id=151, 423.08957pt x 170.77281pt>
+<figure/seriale.pdf, id=152, 423.08957pt x 170.77281pt>
 File: figure/seriale.pdf Graphic file (type pdf)
 
 <use figure/seriale.pdf>
@@ -855,7 +855,7 @@ Package pdftex.def Info: figure/seriale.pdf used on input line 52.
 (pdftex.def)             Requested size: 427.43153pt x 172.53389pt.
 )
 ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/RAM.pdf_tex"
-<figure/RAM.pdf, id=153, 265.71445pt x 153.28421pt>
+<figure/RAM.pdf, id=154, 265.71445pt x 153.28421pt>
 File: figure/RAM.pdf Graphic file (type pdf)
  <use figure/RAM.pdf>
 Package pdftex.def Info: figure/RAM.pdf used on input line 52.
@@ -867,21 +867,21 @@ rs/Raven/Desktop/TeX/Esame calcolatori/figure/parallela.pdf
 pdfTeX warning: pdflatex (file C:/Users/Raven/Desktop/TeX/Esame calcolatori/fig
 ure/parallela.pdf): PDF inclusion: multiple pdfs with page group included in a 
 single page
->] [6 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/seriale.pdf> <C:/Use
-rs/Raven/Desktop/TeX/Esame calcolatori/figure/RAM.pdf
-
-pdfTeX warning: pdflatex (file C:/Users/Raven/Desktop/TeX/Esame calcolatori/fig
-ure/RAM.pdf): PDF inclusion: multiple pdfs with page group included in a single
- page
 >] ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/EPROM.pdf_tex"
-<figure/EPROM.pdf, id=175, 277.51479pt x 147.95924pt>
+<figure/EPROM.pdf, id=167, 277.51479pt x 147.95924pt>
 File: figure/EPROM.pdf Graphic file (type pdf)
  <use figure/EPROM.pdf>
 Package pdftex.def Info: figure/EPROM.pdf used on input line 52.
 (pdftex.def)             Requested size: 427.43153pt x 227.89854pt.
 )
-("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/DMAC.pdf_tex"
-<figure/DMAC.pdf, id=178, 523.53717pt x 322.94579pt>
+[6 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/seriale.pdf> <C:/Users/
+Raven/Desktop/TeX/Esame calcolatori/figure/RAM.pdf
+
+pdfTeX warning: pdflatex (file C:/Users/Raven/Desktop/TeX/Esame calcolatori/fig
+ure/RAM.pdf): PDF inclusion: multiple pdfs with page group included in a single
+ page
+>] ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/DMAC.pdf_tex"
+<figure/DMAC.pdf, id=180, 523.53717pt x 322.94579pt>
 File: figure/DMAC.pdf Graphic file (type pdf)
  <use figure/DMAC.pdf>
 Package pdftex.def Info: figure/DMAC.pdf used on input line 52.
@@ -927,7 +927,7 @@ Overfull \hbox (6.43767pt too wide) in paragraph at lines 91--91
  []
 
 ) ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/latches.pdf_tex"
-<figure/latches.pdf, id=179, 533.45662pt x 151.19879pt>
+<figure/latches.pdf, id=181, 533.45662pt x 151.19879pt>
 File: figure/latches.pdf Graphic file (type pdf)
 
 <use figure/latches.pdf>
@@ -959,13 +959,13 @@ Overfull \hbox (2.62862pt too wide) in paragraph at lines 61--61
  []
 
 )
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 351.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 352.
 
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 351.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 352.
  [7 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/EPROM.pdf>] [8 <C:/Use
 rs/Raven/Desktop/TeX/Esame calcolatori/figure/DMAC.pdf> <C:/Users/Raven/Desktop
 /TeX/Esame calcolatori/figure/latches.pdf
@@ -974,15 +974,15 @@ pdfTeX warning: pdflatex (file C:/Users/Raven/Desktop/TeX/Esame calcolatori/fig
 ure/latches.pdf): PDF inclusion: multiple pdfs with page group included in a si
 ngle page
 >] ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/pic.pdf_tex"
-<figure/pic.pdf, id=201, 397.72069pt x 220.73135pt>
+<figure/pic.pdf, id=203, 397.72069pt x 220.73135pt>
 File: figure/pic.pdf Graphic file (type pdf)
  <use figure/pic.pdf>
 Package pdftex.def Info: figure/pic.pdf used on input line 52.
 (pdftex.def)             Requested size: 427.43153pt x 237.22095pt.
 )
 [9 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/pic.pdf>] [10] [11]
-("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/picedge.pdf_tex"
-<figure/picedge.pdf, id=228, 485.37154pt x 238.87932pt>
+[12] ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\figure/picedge.pdf_tex"
+<figure/picedge.pdf, id=235, 485.37154pt x 238.87932pt>
 File: figure/picedge.pdf Graphic file (type pdf)
 
 <use figure/picedge.pdf>
@@ -998,31 +998,31 @@ Overfull \hbox (5.24329pt too wide) in paragraph at lines 57--57
  []\OT1/cmr/m/n/10 DACK1#+EOP#
  []
 
-) [12] [13 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/picedge.pdf>]
-[14] <figure/itsatrap.jpg, id=250, 492.84125pt x 364.36125pt>
+) [13 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/picedge.pdf>]
+[14] <figure/itsatrap.jpg, id=254, 492.84125pt x 364.36125pt>
 File: figure/itsatrap.jpg Graphic file (type jpg)
 
 <use figure/itsatrap.jpg>
-Package pdftex.def Info: figure/itsatrap.jpg used on input line 652.
+Package pdftex.def Info: figure/itsatrap.jpg used on input line 628.
 (pdftex.def)             Requested size: 246.42001pt x 182.18018pt.
  [15 <C:/Users/Raven/Desktop/TeX/Esame calcolatori/figure/itsatrap.jpg>] [16] [
-17] [18]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 754.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 754.
+17]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 730.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 730.
 
 ("C:\Users\Raven\Desktop\TeX\Esame calcolatori\calcolatoriM.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 754.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 754.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 730.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 730.
 Package rerunfilecheck Info: File `calcolatoriM.out' has not changed.
-(rerunfilecheck)             Checksum: 9402D29E11CBA56ED2DC4AAE4BD1C02F;1450.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 754.
+(rerunfilecheck)             Checksum: B5E4EBE8C015F73F0EC3050640DCC457;1372.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 730.
  ) 
 Here is how much of TeX's memory you used:
- 19597 strings out of 493921
- 387421 string characters out of 3144876
- 526428 words of memory out of 3000000
- 22410 multiletter control sequences out of 15000+200000
- 11735 words of font info for 45 fonts, out of 3000000 for 9000
+ 19605 strings out of 493921
+ 387521 string characters out of 3144876
+ 523702 words of memory out of 3000000
+ 22416 multiletter control sequences out of 15000+200000
+ 12255 words of font info for 47 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  55i,13n,67p,1164b,728s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
@@ -1035,16 +1035,19 @@ am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program
 Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Fil
 es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files 
 (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files (x86
-)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/Mi
-KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/MiKTeX 2.9
-/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
-s/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
-type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on calcolatoriM.pdf (18 pages, 376793 bytes).
+)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program Files (x86)/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX
+ 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type
+1/public/amsfonts/cm/cmti8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/p
+ublic/amsfonts/cm/cmtt10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/pub
+lic/amsfonts/cm/cmtt8.pfb>
+Output written on calcolatoriM.pdf (17 pages, 398926 bytes).
 PDF statistics:
- 343 PDF objects out of 1000 (max. 8388607)
+ 351 PDF objects out of 1000 (max. 8388607)
  77 named destinations out of 1000 (max. 500000)
- 244 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 236 words of extra memory for PDF output out of 10000 (max. 10000000)
 

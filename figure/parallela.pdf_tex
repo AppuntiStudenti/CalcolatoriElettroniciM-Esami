@@ -62,18 +62,15 @@
     \put(-0.02475762,0.29521107){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.09972118\unitlength}\raggedleft HOLDA\end{minipage}}}%
     \put(0.17815403,0.26234031){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.1256964\unitlength}\raggedleft IOB[7...0]\end{minipage}}}%
     \put(0.24381623,0.2294643){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.1256964\unitlength}\raggedleft IORDC\#\end{minipage}}}%
-    \put(0.17904463,0.21312009){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\raggedright 1\end{minipage}}}%
-    \put(0.18003857,0.1799468){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\raggedright 0\end{minipage}}}%
-    \put(0.17966535,0.08149185){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\raggedright 1\end{minipage}}}%
-    \put(0.18065929,0.04831855){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\raggedright 0\end{minipage}}}%
-    \put(-0.02040726,0.21520466){\color[rgb]{0,1,0}\makebox(0,0)[lt]{\begin{minipage}{0.1256964\unitlength}\raggedleft BA1\end{minipage}}}%
+    \put(0.17966535,0.08149185){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\raggedright 0\end{minipage}}}%
+    \put(0.18065929,0.04831855){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\raggedright 1\end{minipage}}}%
     \put(-0.01961568,0.08069018){\color[rgb]{0,1,0}\makebox(0,0)[lt]{\begin{minipage}{0.1256964\unitlength}\raggedleft BA0\end{minipage}}}%
     \put(0.6039118,0.14516593){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\centering SRQ\end{minipage}}}%
     \put(0.58782225,0.05132457){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.09931218\unitlength}\centering DREQi\end{minipage}}}%
     \put(0.6039118,0.31813817){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.06712942\unitlength}\centering RES\end{minipage}}}%
     \put(0.53850993,0.40679215){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.19792449\unitlength}\centering SYS\_RESET\end{minipage}}}%
     \put(0.67035321,0.26097414){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.12990035\unitlength}\raggedleft STROBE\end{minipage}}}%
-    \put(0.68341679,0.19443489){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.11789357\unitlength}\raggedleft D[15...0]\end{minipage}}}%
+    \put(0.68341679,0.19443489){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.11789357\unitlength}\raggedleft D[7...0]\end{minipage}}}%
     \put(0.88095481,0.24056863){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.104696\unitlength}\centering External\\ Device\end{minipage}}}%
     \put(0.59109814,0.24059349){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.09276861\unitlength}\centering P\_INi\end{minipage}}}%
   \end{picture}%
