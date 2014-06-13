@@ -2,3 +2,6 @@
 !*.pdf
 !*/
 !figure/*
+*.aux
+*.log
+*.out
