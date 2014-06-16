@@ -90,7 +90,7 @@ I dati arrivano sulle 3 porte di ingresso con tre flussi concorrenti e \textit{c
 \\
 Si risponda ai seguenti quesiti, motivando le risposte:\\
 \begin{enumerate}
-\item Si disegni lo schema a blocchi di S, si disegni la mappa della memoria che mostra il segmento dati SD con i suoi componenti, si definisca il data segment \textbf{SD} e se ne costruisca il desdrittore. (punti 2) 
+\item Si disegni lo schema a blocchi di S, si disegni la mappa della memoria che mostra il segmento dati SD con i suoi componenti, si definisca il data segment \textbf{SD} e se ne costruisca il descrittore. (punti 2) 
 \item Su integrino nel sistema le porte di ingresso e uscita, il DMAC, il PIC e \textbf{la memoria} e si indichi quali canali di DMA si utilizzano e quanti e quali segnali di \textit{interrupt request} vengono generati. Si dica come vengono programmati il DMAC e i registri esterni del DMAC e \textbf{si disegni il contenuto della IDT.} (punti 5)
 \item Si disegnino \textbf{con cura} le flow chart dei tast \textbf{T0, T1 e Idle (indicando per bene le operazioni di controllo sui dispositivi mappati in I/O)} e si indichi la sequenza dei \textit{task running}, ci si fermi al termine della prima trasmissione di RIS alla seriale. Come si fa a essere sicuri che non si perdano interrupt e, al tempo stesso, che l'arrivo di un interrupt non faccia partire il task T0 quando questo è BUSY? Si faccia l'ipotesi che il PIC sia programmato in \textit{positive edge triggered mode.} (punti 5) 
 \item Impiegando le informazioni precedenti, si indichi approssimativamente dopo quanto tempo termina la trasmissione del primo messaggio a S\_OUT0. Durante questo periodo cosa fa principalmente la CPU? (punti -2...1) 
