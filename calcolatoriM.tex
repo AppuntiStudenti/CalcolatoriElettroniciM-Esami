@@ -607,7 +607,7 @@ RIS(2K-1) 	& \hex{0001\,1FFF} & \verb|0000 0000 0000 0001 0001| & \verb|1111 111
 
 \subsection{Punto (b)}
 La risposta a questa domanda è semplice: \textbf{la cache è tutta vuota e in stato \textit{I (Invalid)}}.
-Questo è vero \textbf{indipendentemente dal tipo di politica adottata dalla cache}. Il motivo è che i vettori A1, A2 e A3 vengono scritti in DMA, e il DMAC \textit{non può accedere in alcun modo alla cache interna della CPU}. Perciò, se assumiamo che il sistema sia stato appena avviato, la cache permano nel suo stato \textit{I}.
+Questo è vero \textbf{indipendentemente dal tipo di politica adottata dalla cache}. Il motivo è che i vettori A1, A2 e A3 vengono scritti in DMA, e il DMAC \textit{non può accedere in alcun modo alla cache interna della CPU}. Perciò, se assumiamo che il sistema sia stato appena avviato, la cache permane nel suo stato \textit{I}.
 
 \subsection{Punto (c)}
 I problemi iniziano qui. Di primo acchito, il codice \textit{DLX-assembly}, in cui con \verb|*| indicheremo esplicitamente un accesso in memoria, per eseguire le operazioni vettoriali (o, per meglio dire, per fare l'operazione sul primo byte, supponendo le altre 2047 praticamente uguali) è il seguente:
